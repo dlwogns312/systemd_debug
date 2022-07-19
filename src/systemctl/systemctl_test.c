@@ -1,6 +1,6 @@
 #include "systemctl_test.h"
 
-#include <getopt.
+#include <getopt.h>
 #include <locale.h>
 #include <unistd.h>
 
