@@ -7,7 +7,7 @@ RUN apt install -y git build-essential meson m4 gperf libcap-dev libmount-dev py
 RUN git clone http://github.com/dlwogns312/systemd_debug.git /home/systemd_debug
 COPY ./.vscode/ /home/systemd_debug/.vscode
 WORKDIR "/home/systemd_debug"
-RUN meson build/
+RUN meson build/ --buildtype debug
 WORKDIR "/home/systemd_debug/build"
 RUN ninja
-RUN meson install 
+RUN meson install
