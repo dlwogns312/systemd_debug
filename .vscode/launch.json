@@ -1,0 +1,42 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "C++ Launch",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/systemd",
+            "cwd": "${workspaceFolder}",
+            "stopAtEntry": true,
+            "targetArchitecture": "x64",
+
+            "MIMode": "gdb",
+            "miDebuggerPath": "/usr/bin/gdb"
+
+          },
+           {
+            "type": "cppdbg",
+            "request": "attach",
+            "processId" : "1",
+            "name": "Attach to gdb",
+            "program": "${workspaceFolder}/build/systemd",
+            "MIMode" :"gdb",
+            "stopAtConnect" : true,
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+//            "customLaunchSetupCommands" : [
+  //              {
+    //                "description" : "break ponit",
+      //              "text" : "b ../src/core/main.c:2654"
+        //        }
+          //  ]
+        }
+
+    ]
+
+}
