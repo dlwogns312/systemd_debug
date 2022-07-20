@@ -1,0 +1,10 @@
+#!/bin/bash
+[Unit]
+Description = Systemd Alarm Daemon
+Wants=test_alarm.timer
+[Service]
+Type=oneshot
+ExecStart=/home/sanghyucklee/test_alarm.sh
+Restart=on-failure
+[Install]
+WantedBy=multi-user.target
