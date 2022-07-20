@@ -323,6 +323,8 @@ static int timer_coldplug(Unit *u) {
 static void timer_enter_dead(Timer *t, TimerResult f) {
         assert(t);
 
+        static int n=0;
+        n++;
         if (t->result == TIMER_SUCCESS)
                 t->result = f;
 

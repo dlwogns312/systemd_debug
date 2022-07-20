@@ -1802,7 +1802,11 @@ static bool service_will_restart(Unit *u) {
 static void service_enter_dead(Service *s, ServiceResult f, bool allow_restart) {
         ServiceState end_state;
         int r;
+        static int n=0;
 
+        static FILE *fp;
+        fp=fopen("/home/test.txt","w");
+        fprintf(fp,"service\n");
         assert(s);
 
         /* If there's a stop job queued before we enter the DEAD state, we shouldn't act on Restart=, in order to not
