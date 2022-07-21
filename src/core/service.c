@@ -43,6 +43,9 @@
 #include "utf8.h"
 #include "util.h"
 
+//debug
+int n=0;
+
 #define service_spawn(...) service_spawn_internal(__func__, __VA_ARGS__)
 
 static const UnitActiveState state_translation_table[_SERVICE_STATE_MAX] = {
@@ -1802,13 +1805,8 @@ static bool service_will_restart(Unit *u) {
 static void service_enter_dead(Service *s, ServiceResult f, bool allow_restart) {
         ServiceState end_state;
         int r;
-        static int n=0;
-
-        static FILE *fp;
-        fp=fopen("/home/test.txt","w");
-        fprintf(fp,"service\n");
         assert(s);
-
+        n++;
         /* If there's a stop job queued before we enter the DEAD state, we shouldn't act on Restart=, in order to not
          * undo what has already been enqueued. */
         if (unit_stop_pending(UNIT(s)))

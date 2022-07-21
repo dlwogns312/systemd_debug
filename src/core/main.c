@@ -100,6 +100,9 @@
 #include <sanitizer/lsan_interface.h>
 #endif
 
+//debug
+extern int n;
+
 #define DEFAULT_TASKS_MAX ((TasksMax) { 15U, 100U }) /* 15% */
 
 static enum {
@@ -2025,6 +2028,7 @@ static int invoke_main_loop(
                         assert_not_reached();
                 }
         }
+        printf("Now N is : %d\n",n);
 }
 
 static void log_execution_mode(bool *ret_first_boot) {
