@@ -44,7 +44,7 @@
 #include "util.h"
 
 //debug
-int n=0;
+int failed_num=0;
 
 #define service_spawn(...) service_spawn_internal(__func__, __VA_ARGS__)
 
@@ -1806,7 +1806,7 @@ static void service_enter_dead(Service *s, ServiceResult f, bool allow_restart) 
         ServiceState end_state;
         int r;
         assert(s);
-        n++;
+        failed_num++;
         /* If there's a stop job queued before we enter the DEAD state, we shouldn't act on Restart=, in order to not
          * undo what has already been enqueued. */
         if (unit_stop_pending(UNIT(s)))

@@ -101,7 +101,7 @@
 #endif
 
 //debug
-extern int n;
+extern int failed_num;
 
 #define DEFAULT_TASKS_MAX ((TasksMax) { 15U, 100U }) /* 15% */
 
@@ -2028,7 +2028,7 @@ static int invoke_main_loop(
                         assert_not_reached();
                 }
         }
-        printf("Now N is : %d\n",n);
+        printf("Number of failed units is : %d\n",failed_num);
 }
 
 static void log_execution_mode(bool *ret_first_boot) {
