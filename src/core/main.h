@@ -7,3 +7,5 @@ extern bool arg_dump_core;
 extern int arg_crash_chvt;
 extern bool arg_crash_shell;
 extern bool arg_crash_reboot;
+
+extern int check_num;

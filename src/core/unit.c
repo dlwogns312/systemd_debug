@@ -72,6 +72,7 @@
 #define NOTICEWORTHY_IO_BYTES (10 * 1024 * 1024ULL)  /* 10 MB */
 #define NOTICEWORTHY_IP_BYTES (128 * 1024 * 1024ULL) /* 128 MB */
 
+int check=0;
 const UnitVTable * const unit_vtable[_UNIT_TYPE_MAX] = {
         [UNIT_SERVICE] = &service_vtable,
         [UNIT_SOCKET] = &socket_vtable,
@@ -5622,6 +5623,17 @@ void unit_log_success(Unit *u) {
 void unit_log_failure(Unit *u, const char *result) {
         assert(u);
         assert(result);
+
+        FILE* fp;
+        fp=fopen("/var/log/test.txt","a+");
+
+        check_num++;
+        if(fp)
+        {
+                fprintf(fp,"%s is failed at %lu\n",u->id,u->active_exit_timestamp.realtime);
+                fclose(fp);
+        }
+
 
         log_unit_struct(u, LOG_WARNING,
                         "MESSAGE_ID=" SD_MESSAGE_UNIT_FAILURE_RESULT_STR,
