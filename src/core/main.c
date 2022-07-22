@@ -2682,7 +2682,7 @@ int main(int argc, char *argv[]) {
 
         assert_se(argc > 0 && !isempty(argv[0]));
         //for debug
-        sleep(30);
+       // sleep(30);
         /* SysV compatibility: redirect init → telinit */
         redirect_telinit(argc, argv);
 

@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM ubuntu:20.04
 ENV TZ=Asia/Seoul
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 RUN apt update
@@ -7,7 +7,7 @@ RUN apt install -y git build-essential meson m4 gperf libcap-dev libmount-dev py
 RUN git clone http://github.com/dlwogns312/systemd_debug.git /home/systemd_debug
 COPY ./.vscode/ /home/systemd_debug/.vscode
 WORKDIR "/home/systemd_debug"
-RUN meson build/ --buildtype=debug
+RUN meson build/ --buildtype debug
 WORKDIR "/home/systemd_debug/build"
 RUN ninja
 RUN meson install
