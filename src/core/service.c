@@ -1087,6 +1087,11 @@ static void service_set_state(Service *s, ServiceState state) {
         old_state = s->state;
         s->state = state;
 
+        if(old_state!=SERVICE_FAILED&&state==SERVICE_FAILED)
+        {
+            failed_num++;
+        }
+
         service_unwatch_pid_file(s);
 
         if (!IN_SET(state,
@@ -2535,6 +2540,9 @@ static int service_start(Unit *u) {
                 return -EAGAIN;
 
         assert(IN_SET(s->state, SERVICE_DEAD, SERVICE_FAILED));
+
+        if(s->state==SERVICE_FAILED)
+            failed_num++;
 
         r = unit_acquire_invocation_id(u);
         if (r < 0)
