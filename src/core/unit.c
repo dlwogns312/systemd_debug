@@ -72,8 +72,9 @@
 #define NOTICEWORTHY_IO_BYTES (10 * 1024 * 1024ULL)  /* 10 MB */
 #define NOTICEWORTHY_IP_BYTES (128 * 1024 * 1024ULL) /* 128 MB */
 
-int check_num=0;
 static int record_state=0;
+static int _status,_code;
+static bool success;
 
 const UnitVTable * const unit_vtable[_UNIT_TYPE_MAX] = {
         [UNIT_SERVICE] = &service_vtable,
@@ -5631,9 +5632,13 @@ void unit_log_failure(Unit *u, const char *result) {
 
         if(fp)
         {
-                record_state=1;
-                fprintf(fp,"%s %lu ",u->id,u->active_exit_timestamp.realtime);
+                fprintf(fp,"%s %lu status=%i/%s%s\n",u->id,now(u->state_change_timestamp.realtime,status),
+                                         strna(_code == CLD_EXITED
+                                               ? exit_status_to_string(_status, EXIT_STATUS_FULL)
+                                               : signal_to_string(_status)),
+                                         _success ? " (success)" : "");
                 fclose(fp);
+                _status=0;_code=0;_success=false;
         }
 
 
@@ -5693,17 +5698,8 @@ void unit_log_process_exit(
                         "COMMAND=%s", strna(command),
                         LOG_UNIT_INVOCATION_ID(u));
 
-        if(record_state)
-        {
-                FILE* fp=fopen("/var/log/test.txt","a");
-                fprintf(fp,"status=%i/%s%s\n",status, strna(code == CLD_EXITED
-                                               ? exit_status_to_string(status, EXIT_STATUS_FULL)
-                                               : signal_to_string(status)),
-                                         success ? " (success)" : "");
-                fclose(fp);
-        }
+        _success=success;_code=code;_status=status;
 
-        record_state=0;
 }
 
 int unit_exit_status(Unit *u) {
