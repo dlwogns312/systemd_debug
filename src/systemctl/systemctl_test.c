@@ -60,19 +60,39 @@
 #include "verbs.h"
 #include "virt.h"
 
+static int file_cur=0;
 
+typedef struct _file_node{
+    char *id;
+    int num;
+    int fp_loc;
+    struct _file_node* next;
+}file_node;
 
+file_node* head=0;
 
+file_node* insert_file_node(char* _id)
+{
+    file_node *temp=(file_node)malloc(sizeof(file_node));
+}
 
-/*int verb_is_failed(int argc, char *argv[], void *userdata) {
-        static const UnitActiveState states[] = {
-                UNIT_FAILED,
-        };
-
-        return check_unit_generic(EXIT_PROGRAM_DEAD_AND_PID_EXISTS, states, ELEMENTSOF(states), strv_skip(argv, 1));
-}*/
 int systemctl_test(void)
 {
-	printf("Systemctl Test!\n");
+    FILE* fp;
+    fp=fopen("/var/log/text.txt","r");
+    if(!fp)
+    {
+        printf("File open error!\n");
+        return 1;
+    }
+
+    char in[200];
+
+    fseek(fp,file_cur,SEEK_SET);
+    while(!feof(fp))
+    {
+        break;
+    }
+
 	return 0;
 }
