@@ -71,10 +71,10 @@ typedef struct _file_node{
 
 file_node* head=0;
 
-file_node* insert_file_node(char* _id)
+/*file_node* insert_file_node(char* _id)
 {
-    file_node *temp=(file_node)malloc(sizeof(file_node));
-}
+    file_node *temp=(file_node*)malloc(sizeof(file_node));
+}*/
 
 int systemctl_test(void)
 {
