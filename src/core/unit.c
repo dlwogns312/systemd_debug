@@ -5630,7 +5630,7 @@ void unit_log_failure(Unit *u, const char *result) {
 
         if(fp)
         {
-                fprintf(fp,"%s %lu %s",u->id,now(u->state_change_timestamp.realtime),_status,tmp);
+                fprintf(fp,"%s %lu %s",u->id,now(u->state_change_timestamp.realtime),tmp);
                 fclose(fp);
         }
 
