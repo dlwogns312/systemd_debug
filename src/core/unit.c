@@ -5696,11 +5696,6 @@ void unit_log_process_exit(
                         "COMMAND=%s", strna(command),
                         LOG_UNIT_INVOCATION_ID(u));
 
-        sprintf(tmp,"status=%i/%s%s",status,
-                                         strna(code == CLD_EXITED
-                                               ? exit_status_to_string(status, EXIT_STATUS_FULL)
-                                               : signal_to_string(status)),
-                                         success ? " (success)" : "");
         _success=success;_code=code;_status=status;
 }
 
