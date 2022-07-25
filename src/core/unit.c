@@ -72,9 +72,8 @@
 #define NOTICEWORTHY_IO_BYTES (10 * 1024 * 1024ULL)  /* 10 MB */
 #define NOTICEWORTHY_IP_BYTES (128 * 1024 * 1024ULL) /* 128 MB */
 
-static int record_state=0;
 static int _status,_code;
-static bool success;
+static bool _success;
 
 const UnitVTable * const unit_vtable[_UNIT_TYPE_MAX] = {
         [UNIT_SERVICE] = &service_vtable,
@@ -5632,7 +5631,7 @@ void unit_log_failure(Unit *u, const char *result) {
 
         if(fp)
         {
-                fprintf(fp,"%s %lu status=%i/%s%s\n",u->id,now(u->state_change_timestamp.realtime,status),
+                fprintf(fp,"%s %lu status=%i/%s%s\n",u->id,now(u->state_change_timestamp.realtime),_status,
                                          strna(_code == CLD_EXITED
                                                ? exit_status_to_string(_status, EXIT_STATUS_FULL)
                                                : signal_to_string(_status)),
