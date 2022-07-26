@@ -59,6 +59,7 @@
 #include "time-util.h"
 #include "verbs.h"
 #include "virt.h"
+#include "systemctl_test.h"
 
 char **arg_types = NULL;
 char **arg_states = NULL;
