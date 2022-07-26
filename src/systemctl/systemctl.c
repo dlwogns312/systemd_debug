@@ -486,7 +486,7 @@ static int systemctl_parse_argv(int argc, char *argv[]) {
                 { "read-only",           no_argument,       NULL, ARG_READ_ONLY           },
                 { "mkdir",               no_argument,       NULL, ARG_MKDIR               },
                 { "marked",              no_argument,       NULL, ARG_MARKED              },
-                { "failed_history",      no_argument,       NULL, 'B'                     },
+                { "failed-history",      no_argument,       NULL, 'B'                     },
                 { "reset-history",       no_argument,       NULL, 'Q'                     },
                 { "num-history",         no_argument,       NULL, 'N'                     },
                 {}

@@ -105,7 +105,6 @@ int num_failed_unit(void)
         for(tmp=head;tmp->next!=NULL;tmp=tmp->next)
             if(!strcmp(tmp->next->id,id_tmp))
             {
-                printf("%s %s : %d\n",tmp->next->id,id_tmp,strcmp(tmp->next->id,id_tmp));
                 tmp->next->num++;
                 break;
             }
