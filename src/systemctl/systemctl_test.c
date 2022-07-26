@@ -60,21 +60,87 @@
 #include "verbs.h"
 #include "virt.h"
 
-static int file_cur=0;
-
 typedef struct _file_node{
-    char *id;
+    char id[50];
     int num;
-    int fp_loc;
     struct _file_node* next;
 }file_node;
 
-file_node* head=0;
+file_node* head=NULL;
+static int fp_loc=0;
 
-/*file_node* insert_file_node(char* _id)
+static file_node* insert_file_node(char* _id)
 {
     file_node *temp=(file_node*)malloc(sizeof(file_node));
-}*/
+    strcpy(temp->id,_id);
+    temp->num=1;
+    temp->next=NULL;
+
+    return temp;
+}
+
+int num_failed_unit(void)
+{
+    FILE* fp;
+    fp=fopen("/var/log/failed_history.txt","r");
+    if(!fp)
+    {
+        printf("Log File Open Error!\n");
+        return 0;
+    }
+
+    fseek(fp,fp_loc,0);
+    if(head==NULL)
+    {
+        head=(file_node*)malloc(sizeof(file_node));
+        head->num=0;head->next=NULL;
+    }
+
+    char time_tmp[20],time_tmp1[20],id_tmp[100],status_tmp[20];
+    file_node* tmp;
+
+    while(!feof(fp))
+    {
+        fscanf(fp,"%s %s %s %s",id_tmp,time_tmp,time_tmp1,status_tmp);
+        for(tmp=head;tmp->next!=NULL;tmp=tmp->next)
+            if(!strcmp(tmp->next->id,id_tmp))
+            {
+                printf("%s %s : %d\n",tmp->next->id,id_tmp,strcmp(tmp->next->id,id_tmp));
+                tmp->next->num++;
+                break;
+            }
+        if(tmp->next==NULL)
+            tmp->next=insert_file_node(id_tmp);
+    }
+
+    printf("Failed Number\tUnit ID\n");
+    for(tmp=head->next;tmp!=NULL;)
+    {
+        printf("%-10d\t%s\n",tmp->num,tmp->id);
+        file_node* for_free=tmp;
+        tmp=tmp->next;
+        free(for_free);
+    }
+    //fp_loc=ftell(fp);
+    free(head);
+    fclose(fp);
+    return 0;
+}
+
+int log_reset(void)
+{
+    char strPath[]={"/var/log/failed_history.txt"};
+    int ret=remove(strPath);
+
+    if(ret==-1)
+    {
+        printf("Failed to remove %s\n",strPath);
+    }
+    else
+        printf("Remove %s Success!\n",strPath);
+
+    return 0;
+}
 
 int systemctl_test(void)
 {
@@ -83,16 +149,16 @@ int systemctl_test(void)
     if(!fp)
     {
         printf("File open error!\n");
-        return 1;
+        return 0;
     }
 
-    printf("Time\t\tUnit ID\t\tStatus\n");
-    char time_tmp[20],time_tmp1[20],id_tmp[20],status_tmp[20];
+    printf("Time\t\t\tFailed Status\tUnit ID\n");
+    char time_tmp[20],time_tmp1[20],id_tmp[100],status_tmp[20];
 
     while(!feof(fp))
     {
         fscanf(fp,"%s %s %s %s",id_tmp,time_tmp,time_tmp1,status_tmp);
-        printf("%s %s\t%s\t%s\n",time_tmp,time_tmp1,id_tmp,status_tmp);
+        printf("%s %s\t%-10s\t%s\n",time_tmp,time_tmp1,status_tmp,id_tmp);
     }
 
     fclose(fp);

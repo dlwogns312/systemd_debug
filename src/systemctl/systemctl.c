@@ -288,7 +288,9 @@ static int systemctl_help(void) {
                "     --root=PATH         Edit/enable/disable/mask unit files in the specified\n"
                "                         root directory\n"
                "  -n --lines=INTEGER     Number of journal entries to show\n"
-               "  -N                     Show failed units since the program booted\n"
+               "  -B --failed-history    Show failed units since the program booted\n"
+               "  -N --num-history       Show the number of failed units categorized by unit name\n"
+               "  -Q --reset-history     Reset the data of failed units\n"
                "  -o --output=STRING     Change journal output mode (short, short-precise,\n"
                "                             short-iso, short-iso-precise, short-full,\n"
                "                             short-monotonic, short-unix,\n"
@@ -484,7 +486,9 @@ static int systemctl_parse_argv(int argc, char *argv[]) {
                 { "read-only",           no_argument,       NULL, ARG_READ_ONLY           },
                 { "mkdir",               no_argument,       NULL, ARG_MKDIR               },
                 { "marked",              no_argument,       NULL, ARG_MARKED              },
-                { "failed_history",      no_argument,       NULL, 'N'                     },
+                { "failed_history",      no_argument,       NULL, 'B'                     },
+                { "reset-history",       no_argument,       NULL, 'Q'                     },
+                { "num-history",         no_argument,       NULL, 'N'                     },
                 {}
         };
 
@@ -496,11 +500,15 @@ static int systemctl_parse_argv(int argc, char *argv[]) {
         /* We default to allowing interactive authorization only in systemctl (not in the legacy commands) */
         arg_ask_password = true;
 
-        while ((c = getopt_long(argc, argv, "Nht:p:P:alqfs:H:M:n:o:iTr.::", options, NULL)) >= 0)
+        while ((c = getopt_long(argc, argv, "NBQht:p:P:alqfs:H:M:n:o:iTr.::", options, NULL)) >= 0)
 
                 switch (c) {
                 case 'N':
+                        return num_failed_unit();
+                case 'B':
                         return systemctl_test();
+                case 'Q':
+                        return log_reset();
                 case 'h':
                         return systemctl_help();
 
