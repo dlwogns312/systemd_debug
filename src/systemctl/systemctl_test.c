@@ -60,6 +60,8 @@
 #include "verbs.h"
 #include "virt.h"
 
+#define MAX_NUM 1000000
+
 typedef struct _file_node{
     char id[50];
     int num;
@@ -83,6 +85,7 @@ int num_failed_unit(void)
 {
     FILE* fp;
     fp=fopen("/var/log/failed_history.txt","r");
+    int num=0;
     if(!fp)
     {
         printf("Log File Open Error!\n");
@@ -101,6 +104,7 @@ int num_failed_unit(void)
 
     while(!feof(fp))
     {
+        num++;
         fscanf(fp,"%s %s %s %s",id_tmp,time_tmp,time_tmp1,status_tmp);
         for(tmp=head;tmp->next!=NULL;tmp=tmp->next)
             if(!strcmp(tmp->next->id,id_tmp))
@@ -123,6 +127,11 @@ int num_failed_unit(void)
     //fp_loc=ftell(fp);
     free(head);
     fclose(fp);
+    if(num>MAX_NUM)
+    {
+        printf("Too many data! Execute log_reset!\n");
+        log_reset();
+    }
     return 0;
 }
 
