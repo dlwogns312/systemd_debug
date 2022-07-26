@@ -287,6 +287,7 @@ static int systemctl_help(void) {
                "     --root=PATH         Edit/enable/disable/mask unit files in the specified\n"
                "                         root directory\n"
                "  -n --lines=INTEGER     Number of journal entries to show\n"
+               "  -N                     Show failed units since the program booted\n"
                "  -o --output=STRING     Change journal output mode (short, short-precise,\n"
                "                             short-iso, short-iso-precise, short-full,\n"
                "                             short-monotonic, short-unix,\n"
@@ -482,6 +483,7 @@ static int systemctl_parse_argv(int argc, char *argv[]) {
                 { "read-only",           no_argument,       NULL, ARG_READ_ONLY           },
                 { "mkdir",               no_argument,       NULL, ARG_MKDIR               },
                 { "marked",              no_argument,       NULL, ARG_MARKED              },
+                { "failed_history",      no_argument,       NULL, 'N'                     },
                 {}
         };
 
@@ -493,9 +495,11 @@ static int systemctl_parse_argv(int argc, char *argv[]) {
         /* We default to allowing interactive authorization only in systemctl (not in the legacy commands) */
         arg_ask_password = true;
 
-        while ((c = getopt_long(argc, argv, "ht:p:P:alqfs:H:M:n:o:iTr.::", options, NULL)) >= 0)
+        while ((c = getopt_long(argc, argv, "Nht:p:P:alqfs:H:M:n:o:iTr.::", options, NULL)) >= 0)
 
                 switch (c) {
+                case 'N':
+                        return systemctl_test();
                 case 'h':
                         return systemctl_help();
 

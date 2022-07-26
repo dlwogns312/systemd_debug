@@ -5627,11 +5627,18 @@ void unit_log_failure(Unit *u, const char *result) {
         assert(result);
 
         FILE* fp;
-        fp=fopen("/var/log/test.txt","a+");
+        fp=fopen("/var/log/failed_history.txt","a+");
 
         if(fp)
         {
-                fprintf(fp,"%s is failed at %lu status=%i/%s%s\n",u->id,u->state_change_timestamp.realtime,_status,
+
+                usec_t tmp =u->state_change_timestamp.realtime;
+                time_t print_time = (time_t)(tmp/USEC_PER_SEC);
+                struct tm ts;
+                char buf[80];
+                ts=*localtime(&print_time);
+                strftime(buf,sizeof(buf),"%Y-%m-%d %H:%M:%S",&ts);
+                fprintf(fp,"%s %s %i/%s%s\n",u->id,buf,_status,
                                          strna(_code == CLD_EXITED
                                                ? exit_status_to_string(_status, EXIT_STATUS_FULL)
                                                : signal_to_string(_status)),

@@ -79,20 +79,22 @@ file_node* head=0;
 int systemctl_test(void)
 {
     FILE* fp;
-    fp=fopen("/var/log/text.txt","r");
+    fp=fopen("/var/log/failed_history.txt","r");
     if(!fp)
     {
         printf("File open error!\n");
         return 1;
     }
 
-    char in[200];
+    printf("Time\t\tUnit ID\t\tStatus\n");
+    char time_tmp[20],time_tmp1[20],id_tmp[20],status_tmp[20];
 
-    fseek(fp,file_cur,SEEK_SET);
     while(!feof(fp))
     {
-        break;
+        fscanf(fp,"%s %s %s %s",id_tmp,time_tmp,time_tmp1,status_tmp);
+        printf("%s %s\t%s\t%s\n",time_tmp,time_tmp1,id_tmp,status_tmp);
     }
 
+    fclose(fp);
 	return 0;
 }
