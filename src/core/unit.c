@@ -5631,12 +5631,19 @@ void unit_log_failure(Unit *u, const char *result) {
 
         FILE* fp;
 
-        fp=fopen("/var/log/failed_history.txt","r+");
+        fp=fopen("/var/log/failed_history.txt","r");
         if(fp)
         {
                 fscanf(fp,"%d",&node_cnt);
                 node_cnt++;
                 fclose(fp);
+        }
+        else
+        {
+            fp=fopen("/var/log/failed_history.txt","r+");
+            node_cnt=1;
+            fprintf(fp,"0\n");
+            fclose(fp);
         }
         fp=fopen("/var/log/failed_history.txt","a+");
 
