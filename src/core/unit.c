@@ -73,7 +73,7 @@
 #define NOTICEWORTHY_IP_BYTES (128 * 1024 * 1024ULL) /* 128 MB */
 
 #define MAX_NUM 1000000
-static int node_cnt=0;
+int node_cnt;
 
 static int _code,_status;
 static bool _success;
