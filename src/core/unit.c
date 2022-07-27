@@ -5672,10 +5672,8 @@ void unit_log_failure(Unit *u, const char *result) {
                 {
                         fprintf(fp,"0\n");
                         fclose(fp);
-                        printf("Remove /var/log/failed_history.txt success!\n");
                 }
-                else
-                        printf("There is no filed called /var/log/failed_history.txt!\n");
+
         }
         else{
                 fp=fopen("/var/log/failed_history.txt","r+");

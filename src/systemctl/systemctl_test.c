@@ -138,10 +138,10 @@ int log_reset(void)
     {
         fprintf(fp,"0\n");
         fclose(fp);
-        printf("Remove /var/log/failed_history.txt success!\n");
+        log_error("Remove /var/log/failed_history.txt success!\n");
     }
     else
-        printf("There is no filed called /var/log/failed_history.txt!\n");
+        log_error("There is no filed called /var/log/failed_history.txt!\n");
 
 
     return 0;
