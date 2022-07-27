@@ -68,6 +68,7 @@ typedef struct _file_node{
 
 file_node* head=NULL;
 static int fp_loc=0;
+int num;
 
 static file_node* insert_file_node(char* _id)
 {
@@ -90,7 +91,7 @@ int num_failed_unit(void)
         return 0;
     }
 
-    fseek(fp,fp_loc,0);
+    //fseek(fp,fp_loc,0);
     if(head==NULL)
     {
         head=(file_node*)malloc(sizeof(file_node));
@@ -100,7 +101,9 @@ int num_failed_unit(void)
     char time_tmp[20],time_tmp1[20],id_tmp[100],status_tmp[20];
     file_node* tmp;
 
-    while(!feof(fp))
+    fscanf(fp,"%d",&num);
+
+    while(num--)
     {
         fscanf(fp,"%s %s %s %s",id_tmp,time_tmp,time_tmp1,status_tmp);
         for(tmp=head;tmp->next!=NULL;tmp=tmp->next)
@@ -129,15 +132,17 @@ int num_failed_unit(void)
 
 int log_reset(void)
 {
-    char strPath[]={"/var/log/failed_history.txt"};
-    int ret=remove(strPath);
+    FILE* fp=fopen("/var/log/failed_history.txt","w");
 
-    if(ret==-1)
+    if(fp)
     {
-        printf("Failed to remove %s\n",strPath);
+        fprintf(fp,"0\n");
+        fclose(fp);
+        printf("Remove /var/log/failed_history.txt success!\n");
     }
     else
-        printf("Remove %s Success!\n",strPath);
+        printf("There is no filed called /var/log/failed_history.txt!\n");
+
 
     return 0;
 }
@@ -154,8 +159,9 @@ int systemctl_test(void)
 
     printf("Time\t\t\tFailed Status\tUnit ID\n");
     char time_tmp[20],time_tmp1[20],id_tmp[100],status_tmp[20];
+    fscanf(fp,"%d",&num);
 
-    while(!feof(fp))
+    while(num--)
     {
         fscanf(fp,"%s %s %s %s",id_tmp,time_tmp,time_tmp1,status_tmp);
         printf("%s %s\t%-10s\t%s\n",time_tmp,time_tmp1,status_tmp,id_tmp);

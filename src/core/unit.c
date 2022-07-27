@@ -5630,6 +5630,14 @@ void unit_log_failure(Unit *u, const char *result) {
         assert(result);
 
         FILE* fp;
+
+        fp=fopen("/var/log/failed_history.txt","r+");
+        if(fp)
+        {
+                fscanf(fp,"%d",&node_cnt);
+                node_cnt++;
+                fclose(fp);
+        }
         fp=fopen("/var/log/failed_history.txt","a+");
 
         if(fp)
@@ -5646,20 +5654,27 @@ void unit_log_failure(Unit *u, const char *result) {
                                                : signal_to_string(_status)),
                                          _success ? " (success)" : "");
                 fclose(fp);
-                node_cnt++;
-                if(node_cnt>MAX_NUM)
-                {
-                   printf("Too many data! Exectue log_reset!\n");
-                   char strPath[]={"/var/log/failed_history.txt"};
-                   int ret=remove(strPath);
-                   if(!ret)
-                        printf("Remove %s Success!\n",strPath);
-                   else
-                        printf("Failed to remove %s\n",strPath);
-                   node_cnt=0;
-                }
         }
 
+        if(node_cnt>MAX_NUM)
+        {
+                printf("Too many data! Exectue log_reset!\n");
+                fp=fopen("/var/log/failed_history.txt","w");
+
+                if(fp)
+                {
+                        fprintf(fp,"0\n");
+                        fclose(fp);
+                        printf("Remove /var/log/failed_history.txt success!\n");
+                }
+                else
+                        printf("There is no filed called /var/log/failed_history.txt!\n");
+        }
+        else{
+                fp=fopen("/var/log/failed_history.txt","r+");
+                fprintf(fp,"%d\n",node_cnt);
+                fclose(fp);
+        }
 
         log_unit_struct(u, LOG_WARNING,
                         "MESSAGE_ID=" SD_MESSAGE_UNIT_FAILURE_RESULT_STR,
