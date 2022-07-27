@@ -72,6 +72,9 @@
 #define NOTICEWORTHY_IO_BYTES (10 * 1024 * 1024ULL)  /* 10 MB */
 #define NOTICEWORTHY_IP_BYTES (128 * 1024 * 1024ULL) /* 128 MB */
 
+#define MAX_NUM 1000000
+static int node_cnt=0;
+
 static int _code,_status;
 static bool _success;
 
@@ -5631,7 +5634,6 @@ void unit_log_failure(Unit *u, const char *result) {
 
         if(fp)
         {
-
                 usec_t tmp =u->state_change_timestamp.realtime;
                 time_t print_time = (time_t)(tmp/USEC_PER_SEC);
                 struct tm ts;
@@ -5644,6 +5646,18 @@ void unit_log_failure(Unit *u, const char *result) {
                                                : signal_to_string(_status)),
                                          _success ? " (success)" : "");
                 fclose(fp);
+                node_cnt++;
+                if(node_cnt>MAX_NUM)
+                {
+                   printf("Too many data! Exectue log_reset!\n");
+                   char strPath[]={"/var/log/failed_history.txt"};
+                   int ret=remove(strPath);
+                   if(!ret)
+                        printf("Remove %s Success!\n",strPath);
+                   else
+                        printf("Failed to remove %s\n",strPath);
+                   node_cnt=0;
+                }
         }
 
 
