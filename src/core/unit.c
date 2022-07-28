@@ -5659,7 +5659,7 @@ void unit_log_failure(Unit *u, const char *result) {
                                          strna(_code == CLD_EXITED
                                                ? exit_status_to_string(_status, EXIT_STATUS_FULL)
                                                : signal_to_string(_status)),
-                                         _success ? " (success)" : "");
+                                         _success ? "(success)" : "");
                 fclose(fp);
         }
 
