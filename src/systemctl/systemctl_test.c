@@ -136,7 +136,7 @@ int log_reset(void)
 
     if(fp)
     {
-        fprintf(fp,"0\n");
+        fprintf(fp,"-10d\n",0);
         fclose(fp);
         log_error("Remove /var/log/failed_history.txt success!\n");
     }

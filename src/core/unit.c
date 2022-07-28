@@ -5642,7 +5642,7 @@ void unit_log_failure(Unit *u, const char *result) {
         {
             fp=fopen("/var/log/failed_history.txt","w");
             node_cnt=1;
-            fprintf(fp,"0\n");
+            fprintf(fp,"%-10d\n",0);
             fclose(fp);
         }
         fp=fopen("/var/log/failed_history.txt","a+");
@@ -5670,14 +5670,14 @@ void unit_log_failure(Unit *u, const char *result) {
 
                 if(fp)
                 {
-                        fprintf(fp,"0\n");
+                        fprintf(fp,"%-10d\n",0);
                         fclose(fp);
                 }
 
         }
         else{
                 fp=fopen("/var/log/failed_history.txt","r+");
-                fprintf(fp,"%d\n",node_cnt);
+                fprintf(fp,"%-10d\n",node_cnt);
                 fclose(fp);
         }
 
