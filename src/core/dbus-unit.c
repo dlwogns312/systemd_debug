@@ -949,6 +949,7 @@ const sd_bus_vtable bus_unit_vtable[] = {
         SD_BUS_PROPERTY("RebootArgument", "s", NULL, offsetof(Unit, reboot_arg), SD_BUS_VTABLE_PROPERTY_CONST),
         SD_BUS_PROPERTY("InvocationID", "ay", bus_property_get_id128, offsetof(Unit, invocation_id), SD_BUS_VTABLE_PROPERTY_EMITS_CHANGE),
         SD_BUS_PROPERTY("CollectMode", "s", property_get_collect_mode, offsetof(Unit, collect_mode), SD_BUS_VTABLE_PROPERTY_CONST),
+        SD_BUS_PROPERTY("FailedNum","i",bus_property_get_int,offsetof(Unit,failed_num),SD_BUS_VTABLE_PROPERTY_EMITS_CHANGE),
         SD_BUS_PROPERTY("Refs", "as", property_get_refs, 0, 0),
 
         SD_BUS_METHOD_WITH_ARGS("Start",

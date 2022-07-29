@@ -243,6 +243,9 @@ typedef struct UnitStatusInfo {
         /* Swap */
         const char *what;
 
+        //Failed_num
+        int failed_num;
+
         /* CGroup */
         uint64_t memory_current;
         uint64_t memory_min;
@@ -739,6 +742,7 @@ static void print_status_info(
         if (i->cpu_usage_nsec != UINT64_MAX)
                 printf("        CPU: %s\n", FORMAT_TIMESPAN(i->cpu_usage_nsec / NSEC_PER_USEC, USEC_PER_MSEC));
 
+        printf(" Failed Num: %d\n",i->failed_num);
         if (i->control_group) {
                 _cleanup_(sd_bus_error_free) sd_bus_error error = SD_BUS_ERROR_NULL;
                 static const char prefix[] = "             ";
@@ -1956,6 +1960,7 @@ static int show_one(
                 { "ExecStopEx",                     "a(sasasttttuii)", map_exec,       0                                                           },
                 { "ExecStopPost",                   "a(sasbttttuii)",  map_exec,       0                                                           },
                 { "ExecStopPostEx",                 "a(sasasttttuii)", map_exec,       0                                                           },
+                { "FailedNum",                      "i",               NULL,           offsetof(UnitStatusInfo,failed_num)                         },
                 {}
         };
 

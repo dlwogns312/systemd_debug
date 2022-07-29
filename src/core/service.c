@@ -43,8 +43,6 @@
 #include "utf8.h"
 #include "util.h"
 
-//debug
-int failed_num=0;
 
 #define service_spawn(...) service_spawn_internal(__func__, __VA_ARGS__)
 
@@ -1087,11 +1085,6 @@ static void service_set_state(Service *s, ServiceState state) {
         old_state = s->state;
         s->state = state;
 
-        if(old_state!=SERVICE_FAILED&&state==SERVICE_FAILED)
-        {
-            failed_num++;
-        }
-
         service_unwatch_pid_file(s);
 
         if (!IN_SET(state,
@@ -1811,7 +1804,7 @@ static void service_enter_dead(Service *s, ServiceResult f, bool allow_restart) 
         ServiceState end_state;
         int r;
         assert(s);
-        failed_num++;
+
         /* If there's a stop job queued before we enter the DEAD state, we shouldn't act on Restart=, in order to not
          * undo what has already been enqueued. */
         if (unit_stop_pending(UNIT(s)))
@@ -2540,9 +2533,6 @@ static int service_start(Unit *u) {
                 return -EAGAIN;
 
         assert(IN_SET(s->state, SERVICE_DEAD, SERVICE_FAILED));
-
-        if(s->state==SERVICE_FAILED)
-            failed_num++;
 
         r = unit_acquire_invocation_id(u);
         if (r < 0)

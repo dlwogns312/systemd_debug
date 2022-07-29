@@ -100,9 +100,6 @@
 #include <sanitizer/lsan_interface.h>
 #endif
 
-//debug
-extern int failed_num;
-
 #define DEFAULT_TASKS_MAX ((TasksMax) { 15U, 100U }) /* 15% */
 
 static enum {
@@ -843,12 +840,9 @@ static int parse_argv(int argc, char *argv[]) {
         if (getpid_cached() == 1)
                 opterr = 0;
 
-        while ((c = getopt_long(argc, argv, "NhDbsz:", options, NULL)) >= 0)
+        while ((c = getopt_long(argc, argv, "hDbsz:", options, NULL)) >= 0)
 
                 switch (c) {
-                case 'N' :
-                        printf("Number of failed units is : %d",failed_num);
-                        return 0;
                 case ARG_LOG_LEVEL:
                         r = log_set_max_level_from_string(optarg);
                         if (r < 0)
@@ -2030,7 +2024,7 @@ static int invoke_main_loop(
                         assert_not_reached();
                 }
         }
-        printf("Number of failed units is : %d\n",failed_num);
+
 }
 
 static void log_execution_mode(bool *ret_first_boot) {

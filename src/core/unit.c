@@ -134,6 +134,8 @@ Unit* unit_new(Manager *m, size_t size) {
         u->start_ratelimit = (RateLimit) { m->default_start_limit_interval, m->default_start_limit_burst };
         u->auto_start_stop_ratelimit = (RateLimit) { 10 * USEC_PER_SEC, 16 };
 
+        u->failed_num=0;
+
         return u;
 }
 
@@ -5647,6 +5649,8 @@ void unit_log_failure(Unit *u, const char *result) {
         }
         fp=fopen("/var/log/failed_history.txt","a+");
 
+        u->failed_num++;
+
         if(fp)
         {
                 usec_t tmp =u->state_change_timestamp.realtime;
@@ -5655,11 +5659,11 @@ void unit_log_failure(Unit *u, const char *result) {
                 char buf[80];
                 ts=*localtime(&print_time);
                 strftime(buf,sizeof(buf),"%Y-%m-%d %H:%M:%S",&ts);
-                fprintf(fp,"%s %s %i/%s%s\n",u->id,buf,_status,
-                                         strna(_code == CLD_EXITED
-                                               ? exit_status_to_string(_status, EXIT_STATUS_FULL)
-                                               : signal_to_string(_status)),
-                                         _success ? "(success)" : "");
+                fprintf(fp,"%s %s %i/%s%s\n",u->id,buf,u->status,
+                                         strna(u->code == CLD_EXITED
+                                               ? exit_status_to_string(u->status, EXIT_STATUS_FULL)
+                                               : signal_to_string(u->status)),
+                                         u->success ? "(success)" : "");
                 fclose(fp);
         }
 
@@ -5737,7 +5741,7 @@ void unit_log_process_exit(
                         "COMMAND=%s", strna(command),
                         LOG_UNIT_INVOCATION_ID(u));
 
-        _success=success;_code=code;_status=status;
+        u->success=success;u->code=code;u->status=status;
 }
 
 int unit_exit_status(Unit *u) {
